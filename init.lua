@@ -566,8 +566,8 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
-        gopls = {},
-        pyright = {},
+        -- gopls = {},
+        -- pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -845,7 +845,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'gdscript', 'godot_resource' },
+      ensure_installed = { 'bash', 'c', 'cpp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'gdscript', 'godot_resource' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -861,8 +861,9 @@ require('lazy').setup({
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
       -- Prefer git instead of curl in order to improve connectivity in some environments
-      require('nvim-treesitter.install').prefer_git = true
+      require('nvim-treesitter.install').prefer_git = false
       ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.install').compilers = { 'clang', 'gcc' }
       require('nvim-treesitter.configs').setup(opts)
 
       -- There are additional nvim-treesitter modules that you can use to interact
@@ -925,8 +926,8 @@ require('lazy').setup({
 if vim.fn.filereadable(vim.fn.getcwd() .. '/project.godot') == 1 then
   local addr = './godot.pipe'
   if vim.fn.has 'win32' == 1 then
-    -- Windows can't pipe so use localhost. Make sure this is conigured in Godot
-    addr = '127.0.0.1:6004'
+    -- Windows can't pipe so use localhost. Make sure this is configured in Godot
+    addr = '127.0.0.1:6008'
   end
   vim.fn.serverstart(addr)
 end
