@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -152,7 +152,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 30
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -162,10 +162,10 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'go to previous [d]iagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'go to next [d]iagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'show diagnostic [e]rror messages' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'open diagnostic [q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -173,13 +173,13 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -275,25 +275,78 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
+    event = 'VeryLazy', -- Sets the loading event to 'VimEnter'
+    opts = {
+      -- Options go here. Mostly default options below. Written for reference.
+      keys = {
+        scroll_down = '<c-d>', -- Binding to scroll down inside the popup. From default config.
+        scroll_up = '<c-u>', -- Binding to scroll up inside the popup. From default config.
+      },
+      show_help = true, -- Show a help message in the command line for using WhichKey. From default config.
+      show_keys = true, -- Show the currently pressed key and its label as a message in the command line. From default config.
+      debug = false, -- Enable wk.log in the current directory. Debug in needed. From default config.
+    },
+    keys = {
+      {
+        '<leader>?',
+        function()
+          require('which-key').show { global = false }
+        end,
+        desc = 'buffer local keymaps (which-key)',
+      },
+    },
+
+    -- Second attempt at configuring the config. Based on the kickstart default config, this function runs AFTER loading.
+    config = function()
+      local wk = require 'which-key'
+      wk.add {
+        { '<leader>c', group = '[c]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[d]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>h', group = 'git [h]unk' },
+        { '<leader>h_', hidden = true },
+        { '<leader>r', group = '[r]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[s]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>t', group = '[t]oggle' },
+        { '<leader>t_', hidden = true },
+        { '<leader>w', group = '[w]orkspace' },
+        { '<leader>w_', hidden = true },
+        {
+          mode = { 'n', 'v' },
+          { '<leader>h', desc = 'git [h]unk' },
+        },
+      }
+    end,
+
+    -- Old default kickstart config for which-key
+    --[[ config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
 
       -- Document existing key chains
       require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+        { '<leader>c', group = '[c]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[d]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>h', group = 'git [h]unk' },
+        { '<leader>h_', hidden = true },
+        { '<leader>r', group = '[r]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[s]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>t', group = '[t]oggle' },
+        { '<leader>t_', hidden = true },
+        { '<leader>w', group = '[w]orkspace' },
+        { '<leader>w_', hidden = true },
       }
       -- visual mode
-      require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
-    end,
+      require('which-key').register {
+        { '<leader>h', desc = 'git [h]unk', mode = 'v' },
+      }
+    end, ]]
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -372,16 +425,16 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[s]earch [h]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[s]earch [k]eymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[s]earch [f]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[s]earch [s]elect telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[s]earch current [w]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[s]earch by [g]rep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[s]earch [d]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[s]earch [r]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[s]earch recent files ("." for repeat)' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -390,7 +443,7 @@ require('lazy').setup({
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = '[/] fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -399,12 +452,12 @@ require('lazy').setup({
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         }
-      end, { desc = '[S]earch [/] in Open Files' })
+      end, { desc = '[s]earch [/] in open files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      end, { desc = '[s]earch [n]eovim files' })
     end,
   },
 
@@ -469,43 +522,43 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', require('telescope.builtin').lsp_definitions, '[g]oto [d]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gr', require('telescope.builtin').lsp_references, '[g]oto [r]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+          map('gI', require('telescope.builtin').lsp_implementations, '[g]oto [I]mplementation')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
-          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'type [D]efinition')
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[d]ocument [s]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[w]orkspace [s]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>rn', vim.lsp.buf.rename, '[r]e[n]ame')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+          map('<leader>ca', vim.lsp.buf.code_action, '[c]ode [a]ction')
 
           -- Opens a popup that displays documentation about the word under your cursor
           --  See `:help K` for why this keymap.
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('K', vim.lsp.buf.hover, '[K] hover documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
-          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          map('gD', vim.lsp.buf.declaration, '[g]oto [D]eclaration')
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
@@ -543,7 +596,7 @@ require('lazy').setup({
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-            end, '[T]oggle Inlay [H]ints')
+            end, '[t]oggle inlay [h]ints')
           end
         end,
       })
@@ -565,10 +618,10 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -622,6 +675,16 @@ require('lazy').setup({
           end,
         },
       }
+      -- Added gdscript manually because it is not listed by default in Mason. So :MasonInstall is not useable in this case.
+      local gdscript_config = {
+        capabilities = capabilities,
+        settings = {},
+      }
+      if vim.fn.has 'win32' == 1 then
+        --Windows specific. Requires nmap installed ('winget install nmap')
+        gdscript_config['cmd'] = { 'ncat', 'localhost', os.getenv 'GDScript_Port' or '6005' }
+      end
+      require('lspconfig').gdscript.setup(gdscript_config)
     end,
   },
 
@@ -635,7 +698,7 @@ require('lazy').setup({
           require('conform').format { async = true, lsp_fallback = true }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[f]ormat buffer',
       },
     },
     opts = {
@@ -731,6 +794,8 @@ require('lazy').setup({
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
 
+          -- NOTE: `<CR>` is a carriage return. Or `Enter`.
+          --
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
           --['<CR>'] = cmp.mapping.confirm { select = true },
@@ -770,6 +835,12 @@ require('lazy').setup({
           { name = 'path' },
         },
       }
+      cmp.setup.filetype({ 'sql' }, {
+        sources = {
+          { name = 'vim-dadbod-completion' },
+          { name = 'buffer' },
+        },
+      })
     end,
   },
 
@@ -835,7 +906,22 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'cpp',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'rst',
+        'vim',
+        'vimdoc',
+        'gdscript',
+        'godot_resource',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -851,8 +937,9 @@ require('lazy').setup({
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
       -- Prefer git instead of curl in order to improve connectivity in some environments
-      require('nvim-treesitter.install').prefer_git = true
+      require('nvim-treesitter.install').prefer_git = false
       ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.install').compilers = { 'clang', 'gcc' }
       require('nvim-treesitter.configs').setup(opts)
 
       -- There are additional nvim-treesitter modules that you can use to interact
@@ -873,11 +960,11 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -885,7 +972,17 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
+
+  -- lspsaga config
+  'nvimdev/lspsaga.nvim',
+  config = function()
+    require('lspsaga').setup {}
+  end,
+  dependencies = {
+    'nvim-treesitter/nvim-treesitter', --optional
+    'nvim-tree/nvim-web-devicons', -- optional
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -910,3 +1007,156 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Enable neovim to be the external editor for Godot, if the cwd has a project.godot file
+if vim.fn.filereadable(vim.fn.getcwd() .. '/project.godot') == 1 then
+  local addr = './godot.pipe'
+  if vim.fn.has 'win32' == 1 then
+    -- Windows can't pipe so use localhost. Make sure this is configured in Godot
+    addr = '127.0.0.1:6008'
+  end
+  vim.fn.serverstart(addr)
+end
+
+------------------------------------------------
+-- Esbonio config | Python Environment Discovery
+------------------------------------------------
+local lspconfig = require 'lspconfig'
+local util = require 'lspconfig.util'
+
+local LSP_DEVTOOLS_PORT = '91234'
+
+vim.lsp.set_log_level 'info'
+
+local function scroll_view(ev)
+  local esbonio = vim.lsp.get_active_clients({ bufnr = 0, name = 'esbonio' })[1]
+  local view = vim.fn.winsaveview()
+
+  local params = { line = view.topline }
+  esbonio.notify('view/scroll', params)
+end
+
+local function preview_file()
+  local_params = {
+    command = 'esbonio.server.previewFile',
+    arguments = {
+      { uri = vim.uri_from_bufnr(0), show = false },
+    },
+  }
+  local result = vim.lsp.buf.execute_command(params)
+  print(vim.inspect(result))
+
+  -- Setup sync scrolling
+  local augroup = vim.api.nvim_create_augroup('EsbonioSyncScroll', { clear = true })
+  vim.api.nvim_create_autocmd({ 'WinScrolled' }, {
+    callback = scroll_view,
+    group = augroup,
+    buffer = 0,
+  })
+end
+
+-- Attempt to fin a virtualenv that the server can use to build the docs.
+
+local function find_venv()
+  -- If there is an active virtual env, use that
+  if vim.env.VIRTUAL_ENV then
+    return { vim.env.VIRTUAL_ENV .. '/bin/python' }
+  end
+
+  -- Search within the current git repo to see if we can find a virtual env to use.
+  local repo = util.find_git_ancestor(vim.fn.getcwd())
+  if not repo then
+    return nil
+  end
+
+  local candidates = vim.fs.find('pyenv.cfg', { path = repo })
+  if #candidates == 0 then
+    return nil
+  end
+
+  return { vim.fn.resolve(candidates[1] .. './../bin/python') }
+end
+
+lspconfig.esbonio.setup {
+  -- Wrap server the the lsp-devtools agen so that we can create our own VSCode style output window.
+  cmd = { 'lsp-devtools', 'agent', '--port', LSP_DEVTOOLS_PORT, '--', 'esbonio' },
+  init_options = {
+    logging = {
+      level = 'debug',
+      -- Redirect logging output to window/logMessage notifications so that lsp-devtools can capture it.
+      stderr = false,
+      window = true,
+    },
+  },
+  settings = {
+    esbonio = {
+      sphinx = {
+        pythonCommand = find_venv(),
+      },
+    },
+  },
+  handlers = {
+    ['editor/scroll'] = function(err, result, ctx, config)
+      vim.cmd('normal ' .. result.line .. 'Gzt')
+    end,
+  },
+  on_attach = function(client, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    local bufopts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', 'gh', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+
+    vim.api.nvim_create_user_command('EsbonioPreviewFile', preview_file, { desc = 'Preview File' })
+  end,
+}
+
+-- UI for $/progress and other notifications
+require('fidget').setup {
+  notification = {
+    override_vim_notify = true,
+  },
+}
+
+-- VSCode-style output window
+local Terminal = require('toggleterm.terminal').Terminal
+local log_output = Terminal:new {
+  cmd = 'lsp-devtools record --port ' .. LSP_DEVTOOLS_PORT .. " -f '{.params.message}'",
+  hidden = false,
+  direction = 'horizontal',
+  auto_scroll = true,
+}
+
+-- Ensure that the terminal is launched, so that it can connect to the server.
+log_output:spawn()
+
+function _log_output_toggle()
+  log_output:toggle()
+end
+
+local keymap_opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap('n', '<leader>wl', '<cmd>lua _log_output_toggle()<CR>', keymap_opts)
+
+-----------------------------------------------------
+-- Obsidian.nvim additional config
+-- Null
+
+-----------------------------------------------------
+-- markview.nvim config
+-- PRESETS
+local presets = require 'markview.presets'
+
+require('markview').setup {
+  checkboxes = presets.checkboxes.nerd,
+  headings = presets.headings.slanted,
+  horizontal_rules = presets.horizontal_rules.thick,
+}
+
+-- MAIN OPTIONS
+require('markview').setup {
+  hybrid_modes = { 'n' },
+}
+
+-- END OF FILE
