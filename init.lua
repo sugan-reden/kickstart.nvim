@@ -152,7 +152,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 30
+vim.opt.scrolloff = 20
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -189,6 +189,10 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- | Custom Keymaps | --
+--  oil.nvim keymaps
+vim.keymap.set('n', '<leader>pv', '<CMD>Oil<CR>')
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -917,11 +921,15 @@ require('lazy').setup({
         'cpp',
         'diff',
         'html',
+        'css',
+        -- 'latex',
         'lua',
         'luadoc',
         'markdown',
         'markdown_inline',
+        'python',
         'rst',
+        'sql',
         'vim',
         'vimdoc',
         'gdscript',
@@ -1144,24 +1152,22 @@ end
 local keymap_opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>wl', '<cmd>lua _log_output_toggle()<CR>', keymap_opts)
 
------------------------------------------------------
--- Obsidian.nvim additional config
+-- | Obsidian.nvim additional config | --
 -- Null
 
------------------------------------------------------
--- markview.nvim config
+-- | markview.nvim config | --
 -- PRESETS
-local presets = require 'markview.presets'
-
-require('markview').setup {
-  checkboxes = presets.checkboxes.nerd,
-  headings = presets.headings.slanted,
-  horizontal_rules = presets.horizontal_rules.thick,
-}
-
--- MAIN OPTIONS
-require('markview').setup {
-  hybrid_modes = { 'n' },
-}
+-- local presets = require 'markview.presets'
+--
+-- require('markview').setup {
+--   checkboxes = presets.checkboxes.nerd,
+--   headings = presets.headings.slanted,
+--   horizontal_rules = presets.horizontal_rules.thick,
+-- }
+--
+-- -- MAIN OPTIONS
+-- require('markview').setup {
+--   hybrid_modes = { 'n' },
+-- }
 
 -- END OF FILE
