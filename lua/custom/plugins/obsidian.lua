@@ -20,7 +20,7 @@ return {
     workspaces = {
       {
         name = 'notes-na',
-        path = 'C:/Users/agust/notes/na',
+        path = 'C:/Users/reden/notes/na',
         overrides = {
           notes_subdir = '00-zettelkasten',
         },
