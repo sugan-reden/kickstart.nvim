@@ -89,7 +89,7 @@ return {
     dap.adapters.cppdbg = {
       id = 'cppdbg',
       type = 'executable',
-      command = 'C:\\Users\\agust\\work\\cpptools-win64\\extension\\debugAdapters\\bin\\OpenDebugAD7.exe',
+      command = 'C:\\Users\\reden\\dev\\cpptools-win64\\extension\\debugAdapters\\bin\\OpenDebugAD7.exe',
       options = {
         detached = false,
       },

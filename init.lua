@@ -152,7 +152,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 20
+vim.opt.scrolloff = 22
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -920,6 +920,7 @@ require('lazy').setup({
         'c',
         'cpp',
         'diff',
+        'djot',
         'html',
         'css',
         -- 'latex',
@@ -1019,7 +1020,66 @@ require('lazy').setup({
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et 
+
+-- | Some of my custom config options. | --
+-- Makes the cursor FAT while in 'Insert Mode'.
+vim.opt.guicursor = ''
+
+-- Enables line numbers + relative line numbers
+vim.opt.nu = true
+vim.opt.relativenumber = true
+
+-- Enables four-space indents
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+
+-- ??
+vim.opt.smartindent = true
+
+-- Enables line wrapping.
+vim.opt.wrap = false
+
+vim.opt.swapfile = false
+vim.opt.backup = false
+-- The following line is missing the undotree plugin to be able to be enabled.
+-- vim.opt.undodir = os.getenv('HOME') .. '/.vim/undodir'
+vim.opt.undofile = true
+
+-- Enables the highlightin while searching with '/'
+-- `incsearch` enables incremental search with '/'
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
+
+-- Enables good colors, lol.
+vim.opt.termguicolors = true
+
+-- Enables a scrolloff limit, making the file retain the numbers of spaces
+-- specified when scrolling up or down.
+vim.opt.scrolloff = 8
+
+-- I don't know what the following lines do, but for posterity.
+-- vim.opt.signcolumn = 'yes'
+-- vim.opt.isfname:append('@-@')
+
+-- Fast update time, lol. Surely it can't be this really this easy, right?
+vim.opt.updatetime = 50
+
+-- Enables a slight coloring of the specified column number.
+vim.opt.colorcolumn = "80,110,120"
+
+-- Here is a better place to place the leader key.
+-- Although, it should probably be at the beginning of the file.
+-- Commented because duplicate for now, cleanup of the config is in order soon.
+-- vim.g.mapleader = ' '
+
+-- Sets ambiwidth for special character like Euro and Copyright sign to be
+-- rendered in double width, useful if you a CJK or, I suppose, kana glyphs
+-- supporting fonts.
+vim.cmd('set ambiwidth')
+-- test ©
 
 -- Enable neovim to be the external editor for Godot, if the cwd has a project.godot file
 if vim.fn.filereadable(vim.fn.getcwd() .. '/project.godot') == 1 then
@@ -1169,5 +1229,20 @@ vim.api.nvim_set_keymap('n', '<leader>wl', '<cmd>lua _log_output_toggle()<CR>', 
 -- require('markview').setup {
 --   hybrid_modes = { 'n' },
 -- }
+
+vim.filetype.add({
+  filename = {
+    ['.dj'] = 'djot',
+  },
+})
+
+-- vim.filetype.add({
+--   pattern = {
+--     '^.*\.dj$'
+--   },
+--   filetype = 'djot',
+-- })
+
+vim.treesitter.language.register('djot', { 'dj' })
 
 -- END OF FILE
