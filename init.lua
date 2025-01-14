@@ -854,8 +854,9 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     -- 'folke/tokyonight.nvim',
-    'catppuccin/nvim',
-    name = 'catppuccin',
+    -- 'catppuccin/nvim',
+    'rebelot/kanagawa.nvim',
+    -- name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
@@ -863,8 +864,11 @@ require('lazy').setup({
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'catppuccin-macchiato'
-      vim.cmd.colorscheme 'catppuccin-mocha'
+      -- vim.cmd.colorscheme 'catppuccin-mocha'
       -- vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.colorscheme 'kanagawa-wave' -- default flavor
+      -- vim.cmd.colorscheme 'kanagawa-dragon' -- darker flavor
+      -- vim.cmd.colorscheme 'kanagawa-lotus' -- light flavor
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -1020,7 +1024,7 @@ require('lazy').setup({
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et 
+-- vim: ts=2 sts=2 sw=2 et
 
 -- | Some of my custom config options. | --
 -- Makes the cursor FAT while in 'Insert Mode'.
@@ -1068,7 +1072,7 @@ vim.opt.scrolloff = 8
 vim.opt.updatetime = 50
 
 -- Enables a slight coloring of the specified column number.
-vim.opt.colorcolumn = "80,110,120"
+vim.opt.colorcolumn = '80,110,120'
 
 -- Here is a better place to place the leader key.
 -- Although, it should probably be at the beginning of the file.
@@ -1078,7 +1082,7 @@ vim.opt.colorcolumn = "80,110,120"
 -- Sets ambiwidth for special character like Euro and Copyright sign to be
 -- rendered in double width, useful if you a CJK or, I suppose, kana glyphs
 -- supporting fonts.
-vim.cmd('set ambiwidth')
+vim.cmd 'set ambiwidth'
 -- test ©
 
 -- Enable neovim to be the external editor for Godot, if the cwd has a project.godot file
@@ -1230,11 +1234,11 @@ vim.api.nvim_set_keymap('n', '<leader>wl', '<cmd>lua _log_output_toggle()<CR>', 
 --   hybrid_modes = { 'n' },
 -- }
 
-vim.filetype.add({
+vim.filetype.add {
   filename = {
     ['.dj'] = 'djot',
   },
-})
+}
 
 -- vim.filetype.add({
 --   pattern = {
