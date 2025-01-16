@@ -1082,7 +1082,7 @@ vim.opt.colorcolumn = '80,110,120'
 -- Sets ambiwidth for special character like Euro and Copyright sign to be
 -- rendered in double width, useful if you a CJK or, I suppose, kana glyphs
 -- supporting fonts.
-vim.cmd 'set ambiwidth'
+-- vim.cmd 'set ambiwidth'
 -- test ©
 
 -- Enable neovim to be the external editor for Godot, if the cwd has a project.godot file
