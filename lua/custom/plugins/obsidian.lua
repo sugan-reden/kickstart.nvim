@@ -45,7 +45,7 @@ return {
     },
 
     -- Where to put new notes. Valid options are
-    -- * 'current_dir' - put new notes in the same directory as the currend buffer.
+    -- * 'current_dir' - put new notes in the same directory as the current buffer.
     -- * 'notes_subdir' - put new notes in the default notes subdirectory.
     new_notes_location = 'notes_subdir',
 
@@ -72,5 +72,17 @@ return {
     ui = {
       enable = false,
     },
+    note_id_func = function(title)
+      local suffix = ''
+      if title ~= nil then
+        suffix = title:gsub(' ', '-'):gsub('[^A-Za-z0-9-]', ''):lower()
+      else
+        for _ = 1, 4 do
+          suffix = suffix .. string.char(math.random(65, 90))
+        end
+        suffix = tostring(os.time()) .. '-' .. suffix
+      end
+      return suffix
+    end,
   },
 }
